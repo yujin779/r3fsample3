@@ -41,7 +41,10 @@ function Scene() {
   )
   // pageの値が変わるたびにsvgsのfunctionが実行される
   useEffect(() => void svgs[page].then(setShapes), [page])
-  // 背景色変更のアニメーション
+  /**
+   * pageの数値が変わるたびに背景の色も変わる。
+   * https://codesandbox.io/s/flamboyant-rgb-z0nhk
+   */
   const { color } = useSpring({ color: colors[page] })
   // Meshをマウント/アンマウントするアニメーション
   const transitions = useTransition(shapes, (item) => item.shape.uuid, {
@@ -61,8 +64,10 @@ function Scene() {
         <planeGeometry attach="geometry" args={[1, 1]} />
         <a.meshPhongMaterial attach="material" color={color} depthTest={false} />
       </mesh>
+      {/* svgを表示するための */}
       <group position={[1600, -700, page]} rotation={[0, deg(180), 0]}>
         {transitions.map(({ item, key, props }) => (
+          //shapeの数だけ作成して、trailの少しずつおくらせて動かす
           <Shape key={key} {...item} {...props} />
         ))}
       </group>
